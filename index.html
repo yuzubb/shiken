@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>学習サイト</title>
+</head>
+<body>
+
+
+    <label for="videoIdInput">動画ID:</label>
+
+    <button onclick="fetchVideoData()">情報を取得</button>
+
+    <div id="status">待機中...</div>
+
+    <h2>取得結果</h2>
+    <div id="result">ここに取得された情報が表示されます。</div>
+
+    <script>
+        async function fetchVideoData() {
+            const videoId = document.getElementById('videoIdInput').value.trim();
+            const statusElement = document.getElementById('status');
+            const resultElement = document.getElementById('result');
+
+            resultElement.innerHTML = ''; 
+            statusElement.textContent = '待機中...';
+            
+            if (!videoId) {
+                statusElement.textContent = '動画IDを入力してください。';
+                return;
+            }
+
+            if (!videoId.match(/^[A-Za-z0-9_-]{11}$/)) {
+                statusElement.textContent = '無効な動画IDです。YouTube IDは通常11文字です。';
+                return;
+            }
+
+            statusElement.textContent = `ID: ${videoId} の情報をサーバーから取得中です...`;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/video?id=${videoId}`);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `サーバーエラー: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                statusElement.textContent = '情報の取得が完了しました。';
+
+                let htmlOutput = `<strong>タイトル: ${result.title}</strong><br><br>`;
+                htmlOutput += '<strong>ダウンロードリンク一覧:</strong><br>';
+                
+                result.links.forEach(l => {
+                    let linkText = l.label.replace(/(\(|\))/g, '').replace(/（/g, ' ').replace(/）/g, '');
+                    linkText = linkText.trim() + " ダウンロード";
+
+                    htmlOutput += `
+                        <a href="${l.url}" target="_blank" style="color: blue; text-decoration: none;">${linkText}</a>
+                        <br>
+                    `;
+                });
+
+                resultElement.innerHTML = htmlOutput;
+
+            } catch (error) {
+                statusElement.textContent = `処理中にエラーが発生しました: ${error.message}`;
+                resultElement.innerHTML = '';
+                console.error('Client side error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
