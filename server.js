@@ -1,5 +1,6 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const path = require('path'); 
 const app = express();
 const port = 3000;
 
@@ -75,6 +76,11 @@ async function getVidflyDataFormatted(videoId) {
     }
 }
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
 app.get('/api/video', async (req, res) => {
     const videoId = req.query.id;
 
@@ -104,4 +110,5 @@ app.get('/api/video', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`サーバーが起動しました: http://localhost:${port}`);
+    console.log(`Webページは http://localhost:${port}/ からアクセスできます。`);
 });
