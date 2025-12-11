@@ -38,7 +38,7 @@
             statusElement.textContent = `ID: ${videoId} の情報をサーバーから取得中です...`;
 
             try {
-                const response = await fetch(`http://localhost:3000/api/video?id=${videoId}`);
+                const response = await fetch(`/api/video?id=${videoId}`);
 
                 if (!response.ok) {
                     const errorData = await response.json();
