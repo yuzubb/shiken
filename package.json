@@ -1,0 +1,22 @@
+{
+  "name": "youtube-video-fetcher-server",
+  "version": "1.0.0",
+  "description": "YouTube ID based video link fetcher using Express and Vidfly API, without CORS proxy.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "youtube",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^2.6.7"
+  }
+}
